@@ -45,14 +45,11 @@ class App extends React.Component {
     }
     ret = axios.get(url);
     ret.then((response)=>{
-
-      //Include code here to check the sentiment and fomrat the data accordingly
-
       this.setState({sentimentOutput:response.data});
       let output = response.data;
-      if(response.data === "positive") {
+      if(response.data.includes("positive")) {
         output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
-      } else if (response.data === "negative"){
+      } else if (response.data.includes("negative")){
         output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
       } else {
         output = <div style={{color:"orange",fontSize:20}}>{response.data}</div>
@@ -71,9 +68,16 @@ class App extends React.Component {
       url = url+"/text/emotion/?text="+document.getElementById("textinput").value;
     }
     ret = axios.get(url);
-
     ret.then((response)=>{
-      this.setState({sentimentOutput:<EmotionTable emotions={response.data}/>});
+      const data = response.data;
+      const emotions = [
+          {emotion: 'sadness', score: data.sadness},
+          {emotion: 'joy', score: data.joy},
+          {emotion: 'fear', score: data.fear},
+          {emotion: 'disgust', score: data.disgust},
+          {emotion: 'anger', score: data.anger},
+        ]
+      this.setState({sentimentOutput:<EmotionTable emotions={emotions}/>});
   });
   }
   
